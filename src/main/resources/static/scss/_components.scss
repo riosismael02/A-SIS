@@ -1,0 +1,329 @@
+@use 'variables' as vars;
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 2rem;
+  background-color: vars.$color-bg;
+  color: vars.$color-text;
+}
+
+/* Reset básico para botones */
+button {
+  all: unset;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: inherit;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+main {
+  flex: 1; /* Empuja el footer al fondo si el contenido es corto */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: vars.$color-h !important;
+}
+
+a {
+  color: vars.$color-text !important;
+}
+
+.mt-container {
+  margin-top: vars.$space-top-containers; /* O define esta variable si no está */
+}
+
+/* Logo */
+.logo {
+  height: 40px;
+}
+
+/* Bloques reutilizables */
+.bloque-elevado {
+  background-color: #fff;
+  border: vars.$border-soft;
+  border-radius: vars.$radius-md;
+  box-shadow: vars.$shadow-md;
+}
+
+/* Navbar */
+.navbar {
+  @extend .bloque-elevado;
+}
+
+/* Botones generales */
+// .btn-primary {
+//   background-color: vars.$color-primary;
+//   color: white;
+//   border: none;
+//   padding: 0.5rem 1rem;
+//   border-radius: vars.$radius-sm;
+//   cursor: pointer;
+//
+//   &:hover {
+//     background-color: vars.$color-primary-dark;
+//   }
+// }
+
+/* Botón acción principal */
+.btn-action {
+  background-color: vars.$color-btn;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: vars.$radius-md;
+  font-weight: 600;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: vars.$color-primary-dark;
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  }
+
+  i {
+    transition: transform 0.3s ease;
+  }
+
+  &:hover i {
+    transform: scale(1.1);
+  }
+}
+ .btn-outline-primary {
+   background: transparent !important;
+   border: 1px solid vars.$color-primary!important;
+   color: vars.$color-primary!important;
+   transition: all 0.3s ease;
+
+   &:hover {
+     background-color: vars.$color-primary!important;
+     color: #fff!important;
+     border-color: vars.$color-primary-dark!important;
+   }
+
+ }
+
+/* Botón salir */
+.btn-salir {
+  transition: all 0.5s ease-in-out;
+  color: vars.$color-danger !important;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  i {
+    font-size: 1.2rem;
+    transition: transform 0.5s ease-in-out;
+    color: vars.$color-danger !important;
+  }
+
+  &:hover i {
+    transform: scale(1.1);
+    color: vars.$color-danger !important;
+  }
+}
+
+.color-iconos {
+  color: vars.$color-primary;
+}
+
+
+/* Accesos directos */
+.accesos-directos {
+  .acceso {
+    margin-top: vars.$space-top-containers !important;
+    @extend .bloque-elevado;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+
+    .icono {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    &:hover .icono {
+      transform: scale(1.1);
+    }
+  }
+}
+
+/* Caja informativa */
+.info-box {
+  background-color: vars.$color-info-bg;
+  padding: 0.75rem;
+  border-radius: vars.$radius-sm;
+  border-left: 5px solid vars.$color-primary;
+  margin-top: 1rem;
+}
+
+/* Tablas tipo Excel */
+.table-excel {
+  border-collapse: collapse;
+  background-color: #fff;
+
+  th, td {
+    border: 1px solid vars.$color-border;
+    padding: 0.4rem;
+    text-align: center;
+    min-width: 80px;
+
+    &:hover {
+      background-color: adjust-color(vars.$color-info-bg, $lightness: 5%);
+    }
+  }
+
+  thead {
+    background-color: #E2F0D9;
+    font-weight: bold;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #F9F9F9;
+  }
+
+  tbody tr:hover {
+    background-color: #EFFBEF;
+  }
+}
+
+
+
+/* Estilos de filas por tipo de día/hora — intuitivos y visuales */
+
+tr.feriado td:first-child {
+  border-left: 4px solid vars.$color-btn; // verde fuerte institucional
+  background-color: vars.$color-info-bg; // fondo verde claro relajado
+}
+
+tr.finde td:first-child {
+  border-left: 4px solid vars.$color-weekend-border;
+  background-color: vars.$color-weekend-bg;
+}
+
+tr.justificada td:first-child {
+  border-left: 4px solid vars.$color-primary;
+  background-color: lighten(vars.$color-info-soft, 10%); // celeste más claro
+  color: vars.$color-primary-dark;
+  font-weight: 600;
+}
+
+tr.ausente td:first-child {
+  border-left: 4px solid vars.$color-danger-border;
+  background-color: vars.$color-warning-bg;
+  color: vars.$color-h;
+  font-weight: 600;
+}
+
+tr.normal {
+  background-color: vars.$color-bg;
+  color: vars.$color-text;
+}
+
+tr.extra {
+  background-color: vars.$color-extra-bg;
+  border-left: 4px solid vars.$color-primary-dark;
+  color: vars.$color-h;
+}
+
+/* Transición suave */
+tr {
+  transition: background-color 0.3s ease, border-left-color 0.3s ease;
+}
+
+.dropdown-menu {
+        background-color: transparent!important;
+        border: none!important;
+        box-shadow: none!important;
+    }
+
+/* Celdas editables */
+.cell-editable {
+  &:hover {
+    outline: 1px dashed vars.$color-primary;
+    background-color: adjust-color(vars.$color-info-bg, $lightness: 8%);
+  }
+
+  &:focus {
+    outline: 2px solid vars.$color-primary;
+    background-color: white;
+  }
+}
+
+/* Footer */
+.footer {
+  font-size: 0.85rem;
+  color: vars.$color-footer;
+  background-color: transparent;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* Formularios horizontales (form-inline-strict) */
+.form-inline-strict {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 2rem;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      white-space: nowrap;
+    }
+
+    input[type="file"],
+    input[type="date"] {
+      width: 170px;
+      padding: 0.4rem 0.6rem;
+    }
+  }
+
+  .btn-submit {
+    @extend .btn-action;
+    align-self: stretch;
+    white-space: nowrap;
+  }
+
+}
+ .btn-outline-primary {
+   background: transparent !important;
+   border: 1px solid vars.$color-primary!important;
+   color: vars.$color-primary!important;
+   transition: all 0.3s ease;
+
+   &:hover {
+     background-color: vars.$color-primary!important;
+     color: #fff!important;
+     border-color: vars.$color-primary-dark!important;
+   }
+
+ }
+

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head('Resumen por Log - A-SIS')"><link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/></head>
+<body>
+
+<div th:replace="fragments/header :: body"></div>
+<main class="flex-fill">
+    <div class="container">
+        <div class="bloque-elevado px-5 py-4 mt-container">
+
+            <!-- Título con ícono -->
+            <div class="d-flex align-items-center mb-4">
+                <a th:href="@{/asistencias/logs}" class="me-3 color-iconos d-flex align-items-center" title="Volver a Logs">
+                    <i class="bi bi-arrow-left-circle me-1 fs-5"></i>
+                    <i class="bi bi-clock-history fs-5"></i>
+                </a>
+                <h4 class="mb-0 text-h">Resumen de Asistencia Mensual</h4>
+            </div>
+
+            <p><strong>Período:</strong>
+                <span th:text="${#temporals.format(log.desde, 'dd/MM/yyyy')}"></span> al
+                <span th:text="${#temporals.format(log.hasta, 'dd/MM/yyyy')}"></span>
+            </p>
+
+            <!-- Tabla -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-excel">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>DNI</th>
+                        <th>Apellido</th>                        <th>Nombre</th>
+
+                        <th>Total Horas</th>
+                        <th>Normales</th>
+                        <th>Extras</th>
+                        <th>Finde/Feriado</th>
+                        <th>Ausencias</th>
+                        <th>Llegadas Tarde</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="e : ${resumen}"
+                        th:attr="data-dni=${e.dni}"
+                        class="clickable-row"
+                        style="cursor:pointer;">
+                        <td th:text="${e.dni}"></td>
+                        <td th:text="${e.apellido}"></td>
+                        <td th:text="${e.nombre}"></td>
+                        <td th:text="${#numbers.formatDecimal(e.totalHoras, 1, 1)}"></td>
+                        <td th:text="${#numbers.formatDecimal(e.totalNormales, 1, 1)}"></td>
+                        <td th:text="${#numbers.formatDecimal(e.totalExtras, 1, 1)}"></td>
+                        <td th:text="${#numbers.formatDecimal(e.totalFinde, 1, 1)}"></td>
+                        <td th:text="${e.totalAusencias}"></td>
+                        <td th:text="${e.totalLlegadasTarde}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = document.querySelectorAll(".clickable-row");
+        const desde = /*[[${#temporals.format(log.desde, 'yyyy-MM-dd')}]]*/ '2025-06-21';
+        const hasta = /*[[${#temporals.format(log.hasta, 'yyyy-MM-dd')}]]*/ '2025-07-20';
+
+        rows.forEach(row => {
+            row.addEventListener("click", () => {
+                const dni = row.getAttribute("data-dni");
+                const url = `/asistencias/detalle?dni=${dni}&desde=${desde}&hasta=${hasta}`;
+                window.location.href = url;
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

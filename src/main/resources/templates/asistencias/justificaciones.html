@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head('Justificar Ausencias - A-SIS')"><link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/></head>
+<script th:src="@{/js/busqueda-dinamica.js}"></script>
+
+<body>
+<div th:replace="fragments/header :: body"></div>
+<main class="flex-fill">
+    <div class="container">
+        <div class="bloque-elevado px-5 py-4 mt-container">
+
+            <div class="d-flex align-items-center mb-4">
+                <a th:href="@{/}" class="me-3 color-iconos d-flex align-items-center" title="Volver al inicio">
+                    <i class="bi bi-arrow-left-circle me-1 fs-5"></i>
+                    <i class="bi bi-house-door-fill fs-5"></i>
+                </a>
+                <h4 class="mb-0 text-h">Justificación de Ausencias</h4>
+            </div>
+
+            <!-- Formulario para justificar ausencia -->
+            <form th:action="@{/justificaciones/guardar}" method="post" class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <!-- BLOQUE 1: Autocompletado -->
+                    <div class="form-group d-flex flex-column position-relative flex-grow-1" style="min-width: 250px;">
+                        <label for="empleado" class="form-label">Empleado</label>
+                        <input type="text" id="empleado" name="empleado" class="form-control"
+                               placeholder="Buscar por apellido, nombre o DNI" autocomplete="off">
+                        <input type="hidden" id="dni" name="dni">
+                        <div id="sugerencias" class="list-group position-absolute w-100 z-3"
+                             style="top: 100%; max-height: 200px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="desde" class="form-label">Desde</label>
+                    <input type="date" class="form-control" id="desde" name="desde" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="hasta" class="form-label">Hasta</label>
+                    <input type="date" class="form-control" id="hasta" name="hasta">
+                    <div class="form-text">Podés dejarlo vacío si es un solo día.</div>
+                </div>
+
+                <div class="col-md-12">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <input type="text" class="form-control" id="descripcion" name="descripcion" required>
+                </div>
+
+                <div class="col-12 d-flex justify-content-end">
+                    <button type="submit" class="btn-action">
+                        <i class="bi bi-check-circle me-1"></i> Justificar ausencia
+                    </button>
+                </div>
+            </form>
+
+            <!-- Aquí podríamos poner la lista de justificaciones más adelante -->
+            <!-- Por ejemplo: empleado, fechas justificadas, descripción, acciones -->
+
+        </div>
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

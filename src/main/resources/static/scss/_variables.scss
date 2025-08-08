@@ -1,0 +1,32 @@
+// 🎨 Paleta de colores personalizada
+$color-bg: #F4FBF7; // Fondo principal suave, casi blanco verdoso
+$color-text: #144D17; // Texto general, verde muy oscuro (casi negro)
+$color-h: #0B2E0F; // Títulos y encabezados (aún más oscuro que el texto común)
+
+$color-primary: #217346; // Color primario base (verde institucional)
+$color-primary-dark: #0F6C0F; // Variante más oscura del color primario, para hover o énfasis
+$color-btn: #107C41; // Verde usado específicamente en botones (acción principal)
+$color-danger: #D95F5F; // rojo sutil, cálido, 15 % de saturación menos que un rojo puro
+$color-border: #D9D9D9; // Bordes suaves y sutiles (gris claro)
+$color-info-bg: #D9EAD3; // Fondo de cajas informativas (verde muy suave)
+
+$color-footer: #6C757D; // Texto del footer (gris oscuro, neutro y elegante)
+
+
+// 📐 Espaciado & estilos generales
+$space-top-containers: 2rem;
+$radius-sm: 4px;
+$radius-md: 0.5rem;
+$border-soft: 1px solid rgba(0, 0, 0, 0.05);
+$shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+$shadow-md: 0 2px 4px rgba(0, 0, 0, 0.04);
+
+
+$color-attention-bg: #FFF3CD;  // Ausencias (amarillo claro)
+$color-extra-bg: #D4EDDA;      // Horas extra (verde claro)
+$color-warning-bg: #FDECEA;    // Feriados (rojo clarito)
+$color-info-soft: #E0F7FA;     // Justificadas (celeste claro)
+$color-weekend-bg: #EAF6FD;    // Fines de semana (azul muy suave)
+
+$color-danger-border: #E74C3C; // Borde feriado (rojo fuerte)
+$color-weekend-border: #3498DB; // Borde finde (azul)

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head('Inicio - A-SIS')"><link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/></head>
+<body>
+
+<div th:replace="fragments/header :: body"></div>
+<main class="flex-fill">
+    <div class="container">
+        <div class="bloque-elevado px-5 py-4 mt-container">
+
+            <!-- Título con íconos -->
+            <div class="d-flex align-items-center mb-4">
+                <a th:href="@{/}" class="me-3 color-iconos d-flex align-items-center" title="Volver al inicio">
+                    <i class="bi bi-arrow-left-circle me-1 fs-5"></i>
+                    <i class="bi bi-house-door-fill fs-5"></i>
+                </a>
+                <h4 class="mb-0 text-h">Cargar archivo de asistencia</h4>
+            </div>
+
+            <!-- Formulario -->
+            <form th:action="@{/asistencias/procesar}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  class="form-inline-strict d-flex flex-wrap gap-3 align-items-end justify-content-between">
+
+                <div class="form-group d-flex flex-column">
+                    <label for="archivo" class="form-label">Archivo Excel</label>
+                    <input id="archivo" type="file" name="archivo" class="form-control" required>
+                </div>
+
+                <div class="form-group d-flex flex-column">
+                    <label for="desde" class="form-label">Desde</label>
+                    <input id="desde" type="date" name="desde" class="form-control" th:value="${desde}" readonly>
+                </div>
+
+                <div class="form-group d-flex flex-column">
+                    <label for="hasta" class="form-label">Hasta</label>
+                    <input id="hasta" type="date" name="hasta" class="form-control" th:value="${hasta}" readonly>
+                </div>
+
+                <button type="submit" class="btn-action mt-sm-3">
+                    <i class="bi bi-save me-1"></i> Guardar y procesar
+                </button>
+            </form>
+
+            <p th:if="${mensaje}" th:text="${mensaje}" class="mt-3 text-success"></p>
+        </div>
+    </div>
+</main>
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

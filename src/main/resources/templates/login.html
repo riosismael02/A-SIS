@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head('Verificación - A-SIS')">
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="container">
+    <nav class="navbar navbar-light bg-white px-5 py-3">
+        <div class="d-flex align-items-center">
+            <a th:href="@{/}" class="d-flex align-items-center text-decoration-none">
+                <img th:src="@{/img/asis-logo.png}" alt="Logo" class="logo me-3">
+                <span class="h3 mb-0 text-dark">Sistema de Asistencia Municipal</span>
+            </a>
+        </div>
+    </nav>
+</div>
+<main class="flex-fill">
+    <div class="container">
+        <div class="bloque-elevado px-5 py-4 mt-container">
+
+            <!-- Título con íconos -->
+            <div class="d-flex align-items-center mb-4">
+                <i class="bi bi-person-fill fs-5 me-3 color-iconos"></i>
+                <h4 class="mb-0 text-h">Iniciar sesión</h4>
+            </div>
+
+            <!-- Mensaje de éxito -->
+            <div th:if="${param.marca == 'ok'}" class="alert alert-success mb-4">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${mensaje}">Marca registrada exitosamente</span>
+            </div>
+
+            <!-- Formulario de login -->
+            <form th:action="@{/login}" method="post" class="mt-4">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="username" class="form-label">Usuario</label>
+                        <input id="username" name="username" type="text" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input id="password" name="password" type="password" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <button type="submit" class="btn-action btn-nowrap">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Ingresar
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
