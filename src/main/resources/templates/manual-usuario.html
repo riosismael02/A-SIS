@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head('Manual de Usuario - A-SIS')">
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: body"></div>
+
+<main class="flex-fill">
+    <div class="container">
+        <div class="bloque-elevado px-5 py-4 mt-container">
+
+            <div class="d-flex align-items-center mb-4">
+                <a href="javascript:history.back()"
+                   class="me-3 color-iconos d-flex align-items-center"
+                   title="Volver atrás">
+                    <i class="bi bi-arrow-left-circle me-1 fs-5"></i>
+                </a>
+                <i class="bi bi-book fs-5 color-iconos me-2"></i>
+                <h4 class="mb-0 text-h">Manual de Usuario</h4>
+            </div>
+
+            <p class="mb-4">
+                Bienvenido al Manual de Usuario de A-SIS. Aquí encontrarás toda la información necesaria para utilizar
+                las funcionalidades del sistema de asistencia, desde la carga de planillas hasta la gestión de
+                ausencias.
+            </p>
+
+            <!-- Contenido del manual -->
+            <section>
+                <div class="mb-4 p-4 border rounded shadow-sm bg-white">
+                    <h5 class="mb-3"><i class="bi bi-person-check-fill me-2 text-primary"></i>Detalle de asistencia individual</h5>
+                    <p>Esta opción es ideal para consultar la asistencia de un empleado específico en cualquier rango de fechas que necesites, sin límite de tiempo.</p>
+                </div>
+
+                <div class="mb-4 p-4 border rounded shadow-sm bg-white">
+                    <h5 class="mb-3"><i class="bi bi-files-alt me-2 text-success"></i>Listar planillas mensuales</h5>
+                    <p>En esta sección puedes ver las últimas 12 planillas de asistencia cargadas en el sistema. Cada planilla muestra un resumen con el detalle de horas trabajadas por tipo para cada empleado, información clave para calcular sueldos.</p>
+                </div>
+
+                <div class="mb-4 p-4 border rounded shadow-sm bg-white">
+                    <h5 class="mb-3"><i class="bi bi-upload me-2 text-info"></i>Cargar planilla mensual</h5>
+                    <p>El día 21 de cada mes deberás cargar la planilla con los registros de asistencia extraídos del reloj biométrico. Sigue estos pasos:</p>
+                    <ol>
+                        <li>Conecta un pendrive al reloj biométrico.</li>
+                        <li>En el reloj, selecciona: <strong>USB &gt; Extraer todo tiempo de conexión</strong>.</li>
+                        <li>Una vez copiados los datos al pendrive, retíralo de forma segura.</li>
+                        <li>Conecta el pendrive a una computadora con acceso al sistema A-SIS.</li>
+                        <li>Busca el archivo <code>ALOG_001.txt</code>, haz clic derecho y elige <em>Abrir con... &gt; Excel</em>.</li>
+                        <li>En Excel, guarda el archivo como <strong>Libro de Excel (*.xlsx)</strong>.</li>
+                        <li>Sube este archivo guardado desde tu computadora al sistema A-SIS usando la opción "Guardar y procesar".</li>
+                    </ol>
+                    <div class="alert alert-info mt-3" role="alert">
+                        Tras cargar y procesar el archivo, podrás ver la planilla mensual con el resumen de asistencia.
+                    </div>
+                </div>
+
+                <div class="mb-4 p-4 border rounded shadow-sm bg-white">
+                    <h5 class="mb-3"><i class="bi bi-person-plus-fill me-2 text-warning"></i>Cargar empleado</h5>
+                    <p><strong>IMPORTANTE:</strong> Antes de dar de alta un empleado, verifica en <em>"Gestionar Empleados"</em> que no esté registrado para evitar duplicados.</p>
+                    <p>Si el empleado no existe, completa sus datos en el formulario correspondiente.</p>
+                    <p><em>Nota:</em> El segundo horario normal se debe cargar solo para ciertos empleados, como los del área de tránsito o del Hogar de Adultos Mayores.</p>
+                    <p>La flexibilidad horaria es igual para todo el personal.</p>
+                </div>
+
+                <div class="mb-4 p-4 border rounded shadow-sm bg-white">
+                    <h5 class="mb-3"><i class="bi bi-pencil-square me-2 text-secondary"></i>Gestionar Empleados</h5>
+                    <p>Esta función te permite corregir datos o confirmar si un empleado ya está registrado.</p>
+                    <div class="alert alert-warning" role="alert">
+                        Usa esta opción con precaución, ya que modificar datos incorrectamente puede generar errores en las planillas mensuales.
+                    </div>
+                </div>
+
+                <div class="mb-4 p-4 border rounded shadow-sm bg-white">
+                    <h5 class="mb-3"><i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i>Justificar ausencias</h5>
+                    <p>Utiliza esta opción únicamente cuando un empleado se ausenta justificadamente.</p>
+                    <p>También sirve para registrar situaciones en las que el empleado llega tarde o se retira antes de tiempo, siempre que sea con justificación.</p>
+                </div>
+
+                <div class="mb-4 p-4 border rounded shadow-sm bg-white">
+                    <h5 class="mb-3"><i class="bi bi-calendar-event-fill me-2 text-info"></i>Ver y asignar feriados</h5>
+                    <p>Los feriados deben estar cargados antes de poner en marcha el sistema A-SIS para que el cálculo de horas sea correcto.</p>
+                    <p>Si detectas errores en algún feriado, puedes eliminarlo y cargar la información correcta.</p>
+                </div>
+            </section>
+
+            <p class="mt-4 text-muted fst-italic small">
+                Para más información detallada contacta al administrador. 
+            </p>
+
+
+        </div>
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

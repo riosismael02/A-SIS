@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head('Gestión Usuarios - A-SIS')">
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+    <script th:src="@{/js/navegacion.js}"></script>
+    <!-- Agregar Bootstrap CSS (si no está ya incluido) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Agregar Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+</head>
+<body>
+
+<div th:replace="fragments/header :: body"></div>
+
+<main class="flex-fill">
+    <div class="container">
+        <div class="bloque-elevado px-5 py-4 mt-container">
+
+            <!-- Título con íconos -->
+            <div class="d-flex align-items-center mb-4">
+                <a th:href="@{/}"
+                   th:data-default-url="@{/}"
+                   class="go-back-link me-3 color-iconos d-flex align-items-center"
+                   title="Volver atrás">
+                    <i class="bi bi-arrow-left-circle me-1 fs-5"></i>
+                </a>
+                <i class="bi bi-person-plus-fill fs-5 me-2 color-iconos"> </i>
+                <h4 class="mb-0 text-h">Crear nuevo usuario</h4>
+            </div>
+            <!-- Formulario de usuario -->
+            <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post" id="userForm" class="mt-4">
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="username" class="form-label">Nombre de usuario</label>
+                        <input type="text" class="form-control" id="username" th:field="*{username}" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="rol" class="form-label">Rol</label>
+                        <select class="form-select" id="rol" th:field="*{rol}" required>
+                            <option value="">Seleccione un rol...</option>
+                            <option th:each="rol : ${roles}"
+                                    th:value="${rol}"
+                                    th:text="${rol.name()}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6 password-input-group">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <i class="bi bi-eye-slash password-toggle" id="togglePassword"></i>
+                        <small class="form-text text-muted">La contraseña será codificada automáticamente</small>
+                    </div>
+
+                    <div class="col-md-6 password-input-group">
+                        <label for="confirmPassword" class="form-label">Repetir Contraseña</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                               required>
+                        <i class="bi bi-eye-slash password-toggle" id="toggleConfirmPassword"></i>
+                        <div class="invalid-feedback" id="passwordError">Las contraseñas no coinciden</div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="empleadoSearch" class="form-label">Buscar empleado</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="empleadoSearch"
+                                   placeholder="Escriba nombre, apellido o DNI del empleado..." autocomplete="off">
+                            <input type="hidden" id="empleadoId" name="empleadoId" required>
+                            <span class="input-group-text" id="clearSearch" style="cursor: pointer; display: none;">
+                                <i class="bi bi-x-circle"></i>
+                            </span>
+                        </div>
+                        <div id="searchResults" class="list-group mt-2" style="display: none; position: absolute; z-index: 1000; width: 100%;"></div>
+                        <div class="invalid-feedback" id="empleadoError">Debe seleccionar un empleado</div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-end">
+                    <button type="submit" class="btn-action btn-nowrap">
+                        <i class="bi bi-save me-1"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle para mostrar/ocultar contraseña
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+        const toggleConfirmPassword = document.querySelector('#toggleConfirmPassword');
+        const confirmPassword = document.querySelector('#confirmPassword');
+
+        // Función para alternar visibilidad
+        function toggleVisibility(inputElement, iconElement) {
+            const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
+            inputElement.setAttribute('type', type);
+            iconElement.classList.toggle('bi-eye');
+            iconElement.classList.toggle('bi-eye-slash');
+        }
+
+        togglePassword.addEventListener('click', function() {
+            toggleVisibility(password, this);
+        });
+
+        toggleConfirmPassword.addEventListener('click', function() {
+            toggleVisibility(confirmPassword, this);
+        });
+
+        // Validación de coincidencia de contraseñas
+        const form = document.getElementById('userForm');
+        const passwordError = document.getElementById('passwordError');
+
+        form.addEventListener('submit', function(event) {
+            let isValid = true;
+
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.classList.add('is-invalid');
+                passwordError.style.display = 'block';
+                isValid = false;
+            } else {
+                confirmPassword.classList.remove('is-invalid');
+                passwordError.style.display = 'none';
+            }
+
+            // Validar que se haya seleccionado un empleado
+            if (!document.getElementById('empleadoId').value) {
+                document.getElementById('empleadoSearch').classList.add('is-invalid');
+                document.getElementById('empleadoError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('empleadoSearch').classList.remove('is-invalid');
+                document.getElementById('empleadoError').style.display = 'none';
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+
+        // Validación en tiempo real
+        confirmPassword.addEventListener('input', function() {
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.classList.add('is-invalid');
+                passwordError.style.display = 'block';
+            } else {
+                confirmPassword.classList.remove('is-invalid');
+                passwordError.style.display = 'none';
+            }
+        });
+
+        // Implementación de la búsqueda dinámica de empleados
+        const empleadoSearch = document.getElementById('empleadoSearch');
+        const empleadoId = document.getElementById('empleadoId');
+        const searchResults = document.getElementById('searchResults');
+        const clearSearch = document.getElementById('clearSearch');
+        let searchTimeout;
+
+        // Función para buscar empleados
+        function buscarEmpleados(query) {
+            if (query.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            fetch(`/empleados/buscar?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    mostrarResultados(data);
+                })
+                .catch(error => {
+                    console.error('Error en la búsqueda:', error);
+                });
+        }
+
+        // Función para mostrar resultados
+        function mostrarResultados(empleados) {
+            searchResults.innerHTML = '';
+
+            if (empleados.length === 0) {
+                searchResults.innerHTML = '<div class="list-group-item">No se encontraron empleados</div>';
+                searchResults.style.display = 'block';
+                return;
+            }
+
+            empleados.forEach(empleado => {
+                const item = document.createElement('button');
+                item.type = 'button';
+                item.className = 'list-group-item list-group-item-action';
+                item.innerHTML = `${empleado.nombre} ${empleado.apellido} (${empleado.dni})`;
+                item.addEventListener('click', function() {
+                    empleadoSearch.value = `${empleado.nombre} ${empleado.apellido} (${empleado.dni})`;
+                    empleadoId.value = empleado.id; 
+                    searchResults.style.display = 'none';
+                    clearSearch.style.display = 'block';
+                    empleadoSearch.classList.remove('is-invalid');
+                    document.getElementById('empleadoError').style.display = 'none';
+                });
+                searchResults.appendChild(item);
+            });
+
+            searchResults.style.display = 'block';
+        }
+
+        // Event listeners para la búsqueda
+        empleadoSearch.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const query = this.value.trim();
+
+            if (query === '') {
+                searchResults.style.display = 'none';
+                empleadoId.value = '';
+                clearSearch.style.display = 'none';
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                buscarEmpleados(query);
+            }, 300);
+        });
+
+        // Limpiar búsqueda
+        clearSearch.addEventListener('click', function() {
+            empleadoSearch.value = '';
+            empleadoId.value = '';
+            searchResults.style.display = 'none';
+            this.style.display = 'none';
+        });
+
+        // Ocultar resultados al hacer clic fuera
+        document.addEventListener('click', function(e) {
+            if (!empleadoSearch.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // Manejar teclas en el campo de búsqueda
+        empleadoSearch.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                searchResults.style.display = 'none';
+            }
+        });
+    });
+</script>
+</body>
+</html>

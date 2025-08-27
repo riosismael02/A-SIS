@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: head('Editar Horario - A-SIS')"><link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/></head>
 
@@ -9,14 +9,16 @@
     <div class="container">
         <div class="bloque-elevado px-5 py-4 mt-container">
 
-            <!-- Título -->
             <div class="d-flex align-items-center mb-4">
-                <a th:href="@{/asistencias/detalle(dni=${edicionDTO.dni})}" class="me-3 color-iconos d-flex align-items-center" title="Volver al detalle">
+                <a href="javascript:history.back()"
+                   class="me-3 color-iconos d-flex align-items-center"
+                   title="Volver atrás">
                     <i class="bi bi-arrow-left-circle me-1 fs-5"></i>
-                    <i class="bi bi-clock fs-5"></i>
                 </a>
+                <i class="bi bi-clock fs-5 me-2 color-iconos"></i>
                 <h4 class="mb-0 text-h">Editar Horarios</h4>
             </div>
+
 
             <!-- Información del empleado y fecha -->
             <div class="mb-4">

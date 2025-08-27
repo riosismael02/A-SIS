@@ -3,7 +3,6 @@ package com.asis.service;
 import com.asis.model.Usuario;
 import com.asis.repository.EmpleadoRepository;
 import com.asis.repository.UsuarioRepository;
-import com.asis.security.UsuarioDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

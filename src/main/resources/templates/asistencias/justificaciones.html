@@ -10,12 +10,16 @@
         <div class="bloque-elevado px-5 py-4 mt-container">
 
             <div class="d-flex align-items-center mb-4">
-                <a th:href="@{/}" class="me-3 color-iconos d-flex align-items-center" title="Volver al inicio">
+                <a href="javascript:history.back()"
+                   class="me-3 color-iconos d-flex align-items-center"
+                   title="Volver atrás">
                     <i class="bi bi-arrow-left-circle me-1 fs-5"></i>
-                    <i class="bi bi-house-door-fill fs-5"></i>
                 </a>
+                <i class="bi bi-file-earmark-check fs-5 me-2 color-iconos"></i>
                 <h4 class="mb-0 text-h">Justificación de Ausencias</h4>
             </div>
+
+
 
             <!-- Formulario para justificar ausencia -->
             <form th:action="@{/justificaciones/guardar}" method="post" class="row g-3 mb-4">

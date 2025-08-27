@@ -9,32 +9,42 @@
     <div class="container">
         <div class="bloque-elevado px-5 py-4 mt-container">
 
-            <!-- Título con íconos -->
             <div class="d-flex align-items-center mb-4">
-                <a th:href="@{/}" class="me-3 color-iconos d-flex align-items-center" title="Volver al inicio">
+                <a href="javascript:history.back()"
+                   class="me-3 color-iconos d-flex align-items-center"
+                   title="Volver atrás">
                     <i class="bi bi-arrow-left-circle me-1 fs-5"></i>
-                    <i class="bi bi-person-plus-fill fs-5"></i>
                 </a>
-                <h4 class="mb-0 text-h">Cargar nuevo empleado</h4>
+                <i class="bi bi-person-down fs-5 me-2 color-iconos"></i>
+                <h4 class="mb-0 text-h">Cargar Empleados</h4>
             </div>
 
             <!-- Formulario de empleado -->
             <form th:action="@{/empleados/guardar}" method="post" class="mt-4">
 
                 <div class="row mb-3">
+                    <div class="col-2">
+                        <label for="legajo" class="form-label">Legajo</label>
+                        <input id="legajo" name="legajo" type="text" class="form-control"
+                               th:value="${empleado.legajo != null} ? ${empleado.legajo} : ''">
+                    </div>
+
                     <div class="col">
                         <label for="dni" class="form-label">DNI</label>
-                        <input id="dni" name="dni" type="text" class="form-control" required>
+                        <input id="dni" name="dni" type="text" class="form-control" required
+                               th:value="${empleado.dni}">
                     </div>
 
                     <div class="col">
                         <label for="nombre" class="form-label">Nombre</label>
-                        <input id="nombre" name="nombre" type="text" class="form-control" required>
+                        <input id="nombre" name="nombre" type="text" class="form-control" required
+                               th:value="${empleado.nombre}">
                     </div>
 
                     <div class="col">
                         <label for="apellido" class="form-label">Apellido</label>
-                        <input id="apellido" name="apellido" type="text" class="form-control" required>
+                        <input id="apellido" name="apellido" type="text" class="form-control" required
+                               th:value="${empleado.apellido}">
                     </div>
 
                     <div class="col">
@@ -47,6 +57,7 @@
                             </option>
                         </select>
                     </div>
+
                     <div class="col">
                         <label for="tipoContrato" class="form-label">Tipo de contrato</label>
                         <select id="tipoContrato" name="tipoContrato" class="form-select">
@@ -60,6 +71,7 @@
                     </div>
                 </div>
 
+
                 <div class="row mb-3">
                     <div class="col">
                         <label for="horaEntrada" class="form-label">Hora de entrada</label>
@@ -72,6 +84,7 @@
                         <input id="horaSalida" name="horaSalida" type="time" class="form-control"
                                th:value="${empleado.horaSalida}" required>
                     </div>
+
                     <div class="col">
                         <label for="horaEntrada2" class="form-label">2da hora de entrada</label>
                         <input id="horaEntrada2" name="horaEntrada2" type="time" class="form-control"
@@ -83,15 +96,16 @@
                         <input id="horaSalida2" name="horaSalida2" type="time" class="form-control"
                                th:value="${empleado.horaSalida2}">
                     </div>
+
                     <div class="col">
                         <label for="flexMinutos" class="form-label">Flexibilidad (min)</label>
                         <input id="flexMinutos" name="flexMinutos" type="number" class="form-control"
                                th:value="${empleado.flexMinutos}" readonly>
                     </div>
 
-                    <div class="col-3 d-flex align-items-end ">
-                        <button type="submit" class="btn-action btn-nowrap">
-                            <i class="bi bi-save me-1"></i> Guardar empleado
+                    <div class="col d-flex align-items-end">
+                        <button type="submit" class="btn-action btn-nowrap w-100">
+                            <i class="bi bi-save me-1"></i> Guardar
                         </button>
                     </div>
                 </div>

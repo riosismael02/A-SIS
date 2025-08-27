@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: head('Inicio - A-SIS')"><link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/></head>
+<head th:replace="fragments/header :: head('Carga Asistencias - A-SIS')"><link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/></head>
 <body>
 
 <div th:replace="fragments/header :: body"></div>
@@ -8,14 +8,16 @@
     <div class="container">
         <div class="bloque-elevado px-5 py-4 mt-container">
 
-            <!-- Título con íconos -->
             <div class="d-flex align-items-center mb-4">
-                <a th:href="@{/}" class="me-3 color-iconos d-flex align-items-center" title="Volver al inicio">
+                <a href="javascript:history.back()"
+                   class="me-3 color-iconos d-flex align-items-center"
+                   title="Volver atrás">
                     <i class="bi bi-arrow-left-circle me-1 fs-5"></i>
-                    <i class="bi bi-house-door-fill fs-5"></i>
                 </a>
-                <h4 class="mb-0 text-h">Cargar archivo de asistencia</h4>
+                <i class="bi bi-upload fs-5 me-2 color-iconos"></i>
+                <h4 class="mb-0 text-h">Cargar Planilla Mensual de Asistencia</h4>
             </div>
+
 
             <!-- Formulario -->
             <form th:action="@{/asistencias/procesar}"

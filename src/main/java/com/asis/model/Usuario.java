@@ -2,7 +2,6 @@ package com.asis.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import com.asis.model.Rol;
 
 
 @Data
@@ -25,13 +24,9 @@ public class Usuario {
     @Column(nullable = false)
     private boolean activo;
 
-    // Usuario.java
     @OneToOne(mappedBy = "usuario", fetch = FetchType.LAZY)
     private Empleado empleado;
-    @Lob
-    @Column(columnDefinition = "LONGBLOB")
-    private byte[] imagen;
 
 
 
-    }
+}

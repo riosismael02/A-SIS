@@ -1,12 +1,13 @@
 package com.asis.model.dto;
 
+import com.asis.model.Empleado;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class ResumenAsistenciasDTO {
     private String dni;
     private String nombre;
@@ -17,5 +18,9 @@ public class ResumenAsistenciasDTO {
     private double totalFinde;
     private long totalAusencias;
     private long totalLlegadasTarde;
+    private Empleado.TipoContrato tipoContrato;
 }
+
+
+
 

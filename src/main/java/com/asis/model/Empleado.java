@@ -18,8 +18,9 @@ public class Empleado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String dni;
 
+    private String dni;
+    private String legajo;
     private String nombre;
     private String apellido;
 

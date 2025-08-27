@@ -11,12 +11,12 @@
                 <div class="container">
                     <div class="row g-4 justify-content-center accesos-directos">
 
-                        <!-- CONSULTA / LISTADO -->
+                        <!-- SECCIÓN ASISTENCIAS (Azul) -->
                         <div class="col-md-4">
                             <a th:href="@{/asistencias/detalle}" class="text-decoration-none">
                                 <div class="shortcut-card acceso">
                                     <i class="bi bi-search icono text-primary"></i>
-                                    <h5>Detalle de Asistencia Individual</h5>
+                                    <h5>Detalle de Asistencias</h5>
                                 </div>
                             </a>
                         </div>
@@ -24,81 +24,81 @@
                         <div class="col-md-4">
                             <a th:href="@{/asistencias/logs}" class="text-decoration-none">
                                 <div class="shortcut-card acceso">
-                                    <i class="bi bi-files icono text-primary"></i>
-                                    <h5>Listar Planillas Mensuales</h5>
+                                    <i class="bi bi-list-check icono text-primary"></i>
+                                    <h5>Planillas Mensuales</h5>
                                 </div>
                             </a>
                         </div>
 
-                        <!-- CARGA / ALTA -->
                         <div class="col-md-4">
                             <a th:href="@{/asistencias/cargar}" class="text-decoration-none">
                                 <div class="shortcut-card acceso">
-                                    <i class="bi bi-calendar-check icono text-success"></i>
-                                    <h5>Cargar Planilla Mensual</h5>
+                                    <i class="bi bi-calendar-plus icono text-primary"></i>
+                                    <h5>Cargar Asistencias</h5>
                                 </div>
                             </a>
                         </div>
 
-                        <div class="col-md-4 mt-0">
+                        <!-- SECCIÓN EMPLEADOS (Verde) -->
+                        <div class="col-md-4">
                             <a th:href="@{/empleados/cargar}" class="text-decoration-none">
                                 <div class="shortcut-card acceso">
                                     <i class="bi bi-person-plus icono text-success"></i>
-                                    <h5>Cargar Empleado</h5>
+                                    <h5>Nuevo Empleado</h5>
                                 </div>
                             </a>
                         </div>
 
-                        <!-- MODIFICACIÓN -->
-                        <div class="col-md-4 mt-0">
+                        <div class="col-md-4">
                             <a th:href="@{/empleados/modificar}" class="text-decoration-none">
                                 <div class="shortcut-card acceso">
-                                    <i class="bi bi-person-gear icono text-warning"></i>
-                                    <h5>Modificar Empleado</h5>
+                                    <i class="bi bi-person-lines-fill icono text-success"></i>
+                                    <h5>Gestionar Empleados</h5>
                                 </div>
                             </a>
                         </div>
 
-                        <div class="col-md-4 mt-0">
-                            <a th:href="@{/carga-horaria/modificar}" class="text-decoration-none">
+                        <!-- SECCIÓN USUARIOS (Morado) -->
+                        <div class="col-md-4">
+                            <a th:href="@{/usuarios/nuevo}" class="text-decoration-none">
                                 <div class="shortcut-card acceso">
-                                    <i class="bi bi-clock-history icono text-warning"></i>
-                                    <h5>Modificar Carga Horaria</h5>
+                                    <i class="bi bi-person-gear icono text-purple"></i>
+                                    <h5>Gestionar Usuarios</h5>
                                 </div>
                             </a>
                         </div>
 
-                        <div class="col-md-4 mt-0">
+                        <!-- SECCIÓN JUSTIFICACIONES (Naranja) -->
+                        <div class="col-md-4">
                             <a th:href="@{/justificaciones/cargar}" class="text-decoration-none">
                                 <div class="shortcut-card acceso">
-                                    <i class="bi bi-exclamation-diamond icono text-warning"></i>
+                                    <i class="bi bi-clipboard2-pulse icono text-warning"></i>
                                     <h5>Justificar Ausencias</h5>
                                 </div>
                             </a>
                         </div>
 
-                        <!-- GESTIÓN / CONFIGURACIÓN -->
-                        <div class="col-md-4 mt-0">
+                        <!-- SECCIÓN CONFIGURACIÓN (Azul Oscuro) -->
+                        <div class="col-md-4">
                             <a th:href="@{/feriados}" class="text-decoration-none">
                                 <div class="shortcut-card acceso">
                                     <i class="bi bi-calendar-event icono text-info"></i>
-                                    <h5>Ver y Asignar Feriados</h5>
+                                    <h5>Gestionar Feriados</h5>
                                 </div>
                             </a>
                         </div>
 
-                        <!-- DOCUMENTACIÓN -->
-                        <div class="col-md-4 mt-0">
+                        <!-- SECCIÓN DOCUMENTACIÓN (Gris) -->
+                        <div class="col-md-4">
                             <a th:href="@{/manual}" class="text-decoration-none">
                                 <div class="shortcut-card acceso">
-                                    <i class="bi bi-journal-bookmark icono text-secondary"></i>
+                                    <i class="bi bi-book icono text-secondary"></i>
                                     <h5>Manual de Usuario</h5>
                                 </div>
                             </a>
                         </div>
 
                     </div>
-
                 </div>
             </main>
         </div>

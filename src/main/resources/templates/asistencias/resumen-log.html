@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: head('Resumen por Log - A-SIS')"><link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/></head>
+<head th:replace="fragments/header :: head('Resumen por Log - A-SIS')">
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+</head>
 <body>
 
 <div th:replace="fragments/header :: body"></div>
@@ -8,28 +10,72 @@
     <div class="container">
         <div class="bloque-elevado px-5 py-4 mt-container">
 
-            <!-- Título con ícono -->
             <div class="d-flex align-items-center mb-4">
-                <a th:href="@{/asistencias/logs}" class="me-3 color-iconos d-flex align-items-center" title="Volver a Logs">
+                <a th:href="${previousPage != null ? previousPage : '/'}"
+                   class="me-3 color-iconos d-flex align-items-center"
+                   title="Volver atrás">
                     <i class="bi bi-arrow-left-circle me-1 fs-5"></i>
-                    <i class="bi bi-clock-history fs-5"></i>
                 </a>
+                <i class="bi bi-bar-chart-fill fs-5 me-2 color-iconos"></i>
                 <h4 class="mb-0 text-h">Resumen de Asistencia Mensual</h4>
             </div>
 
-            <p><strong>Período:</strong>
-                <span th:text="${#temporals.format(log.desde, 'dd/MM/yyyy')}"></span> al
-                <span th:text="${#temporals.format(log.hasta, 'dd/MM/yyyy')}"></span>
-            </p>
+            <script th:src="@{/js/navigation.js}" defer></script>
 
+            <!-- Filtro por tipo de contrato -->
+            <div class="row mb-4 align-items-center">
+                <!-- Columna del filtro -->
+                <div class="col-md-5">
+                    <form method="get" th:action="@{/asistencias/resumen-por-log/{logId}(logId=${log.id})}"
+                          class="row g-2 align-items-center">
+                        <!-- Select con label integrado -->
+                        <div class="col-md-7">
+                            <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0 pe-1">
+                        <i class="bi bi-funnel"></i>
+                    </span>
+                                <select id="tipoContrato" name="tipoContrato" class="form-select border-start-0 ps-1">
+                                    <option value="">Todos los contratos</option>
+                                    <option th:each="tipo : ${tiposContrato}"
+                                            th:value="${tipo.name()}"
+                                            th:text="${tipo}"
+                                            th:selected="${tipoContratoSeleccionado != null and tipoContratoSeleccionado == tipo}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="col-md-5">
+                            <div class="d-flex">
+                                <button type="submit" class="btn-action">
+                                    <i class="bi bi-search me-1"></i> Buscar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Columna del período -->
+                <div class="col-md-7">
+                    <div class="d-flex justify-content-end align-items-center">
+            <span class="badge bg-light text-dark fs-6">
+                <strong>Período:</strong>
+                <span th:text="${#temporals.format(log.desde, 'dd/MM/yyyy')}"></span> -
+                <span th:text="${#temporals.format(log.hasta, 'dd/MM/yyyy')}"></span>
+            </span>
+                    </div>
+                </div>
+            </div>
             <!-- Tabla -->
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-excel">
                     <thead class="table-dark">
                     <tr>
                         <th>DNI</th>
-                        <th>Apellido</th>                        <th>Nombre</th>
-
+                        <th>Apellido</th>
+                        <th>Nombre</th>
+                        <th>Tipo Contrato</th>
                         <th>Total Horas</th>
                         <th>Normales</th>
                         <th>Extras</th>
@@ -46,6 +92,7 @@
                         <td th:text="${e.dni}"></td>
                         <td th:text="${e.apellido}"></td>
                         <td th:text="${e.nombre}"></td>
+                        <td th:text="${e.tipoContrato}"></td>
                         <td th:text="${#numbers.formatDecimal(e.totalHoras, 1, 1)}"></td>
                         <td th:text="${#numbers.formatDecimal(e.totalNormales, 1, 1)}"></td>
                         <td th:text="${#numbers.formatDecimal(e.totalExtras, 1, 1)}"></td>
@@ -57,7 +104,6 @@
                 </table>
             </div>
 
-
         </div>
     </div>
 </main>
@@ -65,18 +111,19 @@
 <div th:replace="fragments/footer :: footer"></div>
 <script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
-        const rows = document.querySelectorAll(".clickable-row");
-        const desde = /*[[${#temporals.format(log.desde, 'yyyy-MM-dd')}]]*/ '2025-06-21';
-        const hasta = /*[[${#temporals.format(log.hasta, 'yyyy-MM-dd')}]]*/ '2025-07-20';
+    const rows = document.querySelectorAll(".clickable-row");
+    const desde = /*[[${#temporals.format(log.desde, 'yyyy-MM-dd')}]]*/ '2025-06-21';
+    const hasta = /*[[${#temporals.format(log.hasta, 'yyyy-MM-dd')}]]*/ '2025-07-20';
 
-        rows.forEach(row => {
-            row.addEventListener("click", () => {
-                const dni = row.getAttribute("data-dni");
-                const url = `/asistencias/detalle?dni=${dni}&desde=${desde}&hasta=${hasta}`;
-                window.location.href = url;
-            });
+    rows.forEach(row => {
+        row.addEventListener("click", () => {
+            const dni = row.getAttribute("data-dni");
+            const url = `/asistencias/detalle?dni=${dni}&desde=${desde}&hasta=${hasta}`;
+            window.open(url, '_blank'); // <-- abre en nueva pestaña
         });
     });
+});
+
 </script>
 
 </body>

@@ -1,6 +1,7 @@
 package com.asis.controller;
 
 
+import com.asis.model.Empleado;
 import com.asis.model.LogCargaAsistencia;
 import com.asis.model.dto.CargaAsistenciaDTO;
 import com.asis.model.dto.EdicionHorarioDTO;
@@ -12,7 +13,6 @@ import com.asis.service.ExcelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,12 +37,11 @@ public class AsistenciaController {
     public String mostrarFormularioCarga(Model model) {
         LocalDate hoy = LocalDate.now();
 
-        // 21 del mes anterior
-//        LocalDate desde = hoy.minusMonths(1).withDayOfMonth(21);
+        // Desde: 15 del mes pasado
+        LocalDate desde = hoy.minusMonths(1).withDayOfMonth(15);
 
-        // 20 del mes actual
-        LocalDate desde = hoy.minusMonths(1).withDayOfMonth(22);
-        LocalDate hasta = hoy.minusMonths(1).withDayOfMonth(29);
+        // Hasta: 7 del mes actual
+        LocalDate hasta = hoy.withDayOfMonth(7);
 
         model.addAttribute("desde", desde);
         model.addAttribute("hasta", hasta);
@@ -78,17 +77,29 @@ public class AsistenciaController {
     }
 
     @GetMapping("/resumen-por-log/{logId}")
-    public String mostrarResumenTotalesPorLog(@PathVariable Long logId, Model model) {
-        LogCargaAsistencia log = cargaAsistRepo.findById(logId).orElseThrow(() -> new RuntimeException("Log no encontrado"));
+    public String mostrarResumenTotalesPorLog(
+            @PathVariable Long logId,
+            @RequestParam(required = false) String tipoContrato,  // Recibir como String
+            Model model) {
 
-        List<ResumenAsistenciasDTO> resumen = excelService.generarResumenTotalesPorLog(logId);
+        Empleado.TipoContrato tipoEnum = null;
+        if (tipoContrato != null && !tipoContrato.isEmpty()) {
+            try {
+                tipoEnum = Empleado.TipoContrato.valueOf(tipoContrato);
+            } catch (IllegalArgumentException e) {
+                // Manejar error si es necesario
+            }
+        }
 
-        model.addAttribute("log", log);
+        List<ResumenAsistenciasDTO> resumen = excelService.generarResumenTotalesPorLog(logId, tipoEnum);
+
+        model.addAttribute("log", cargaAsistRepo.findById(logId).orElseThrow());
         model.addAttribute("resumen", resumen);
+        model.addAttribute("tiposContrato", Empleado.TipoContrato.values());
+        model.addAttribute("tipoContratoSeleccionado", tipoEnum);
 
-        return "asistencias/resumen-log";
+        return "asistencias/resumen-log";  // Misma plantilla para todos los casos
     }
-
     @PostMapping("/logs/eliminar/{logId}")
     public String eliminarLog(@PathVariable Long logId, RedirectAttributes redirectAttrs) {
         cargaAsistRepo.findById(logId).ifPresentOrElse(log -> {

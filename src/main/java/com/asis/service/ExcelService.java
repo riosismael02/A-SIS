@@ -30,9 +30,9 @@ public class ExcelService {
 
     private final EmpleadoRepository empleadoRepo;
     private final RegistroRepository registroRepository;
+
     private final LogCargaAsistenciaRepository logCargaRepository;
     private final FeriadoService feriadoService;
-    private final JustificacionAusenciaService justificacionService;
 
 
     @Transactional
@@ -169,6 +169,7 @@ public class ExcelService {
         int minutosTardeTotales = 0;
         int totalIncompletos = 0;
 
+
         LocalDate actual = desde;
 
         while (!actual.isAfter(hasta)) {
@@ -213,6 +214,7 @@ public class ExcelService {
                     dtoIncompleto.setEsFeriado(esFeriado);
                     dtoIncompleto.setEsFinDeSemana(esFinDeSemana);
                     dtoIncompleto.setJustificada(false);
+
                     detalle.add(dtoIncompleto);
                 }
 
@@ -242,6 +244,16 @@ public class ExcelService {
                     RegistroAsistencia entrada = marcasDelDia.get(i);
                     RegistroAsistencia salida = marcasDelDia.get(i + 1);
 
+                    // CONVERTIR las fotos a Base64
+                    String fotoEntradaBase64 = null;
+                    if (entrada.getFoto() != null && entrada.getFoto().length > 0) {
+                        fotoEntradaBase64 = Base64.getEncoder().encodeToString(entrada.getFoto());
+                    }
+
+                    String fotoSalidaBase64 = null;
+                    if (salida.getFoto() != null && salida.getFoto().length > 0) {
+                        fotoSalidaBase64 = Base64.getEncoder().encodeToString(salida.getFoto());
+                    }
                     if (entrada.getHora().equals(salida.getHora()) || entrada.getHora().isAfter(salida.getHora())) {
                         continue;
                     }
@@ -279,16 +291,19 @@ public class ExcelService {
                         }
 
                         if (entrada.getHora().isBefore(horaEntradaMinima)) {
-                            horasExtras += Duration.between(entrada.getHora(), horaEntradaMinima).toMinutes() / 60.0;
+                            double extrasEntrada = Duration.between(entrada.getHora(), horaEntradaMinima).toMinutes() / 60.0;
+                            horasExtras += extrasEntrada;
                         }
                         if (salida.getHora().isAfter(horaSalidaMaxima)) {
-                            horasExtras += Duration.between(horaSalidaMaxima, salida.getHora()).toMinutes() / 60.0;
+                            double extrasSalida = Duration.between(horaSalidaMaxima, salida.getHora()).toMinutes() / 60.0;
+                            horasExtras += extrasSalida;
                         }
 
                         tipoHora = esPrimeraMarca ? (horasExtras > 0 ? "MIXTO" : "NORMAL") : "EXTRA";
 
                         totalNormales += horasNormales;
                         totalExtras += horasExtras;
+
                         despuesDeHora = horasExtras * 60;
                     }
 
@@ -319,6 +334,10 @@ public class ExcelService {
                     dto.setEsFinDeSemana(esFinDeSemana);
                     dto.setJustificada(esJustificada);
                     dto.setSegundoHorario(esSegundoHorario);
+                    dto.setHorasExtras(horasExtras);
+                    dto.setFotoEntradaBase64(fotoEntradaBase64);
+                    dto.setFotoSalidaBase64(fotoSalidaBase64);
+
                     detalle.add(dto);
 
                     esPrimeraMarca = false;
@@ -347,6 +366,7 @@ public class ExcelService {
                 dto.setMinutosTarde(0);
                 dto.setMarcaIncompleta(false);
                 dto.setSegundoHorario(false);
+
                 detalle.add(dto);
 
                 if (esAusencia) {
@@ -396,25 +416,30 @@ public class ExcelService {
                 .sum();
 
         double totalExtras = registrosValidos.stream()
-                .mapToDouble(d -> {
-                    if ("EXTRA".equals(d.getTipoHora())) {
-                        return d.getHorasTrabajadas();
-                    } else if ("MIXTO".equals(d.getTipoHora())) {
-                        return d.getDespuesDeHora() / 60.0;
-                    }
-                    return 0;
-                })
+                .mapToDouble(ResumenEmpleadoDTO::getHorasExtras)
                 .sum();
 
-        double totalFindeFeriado = registrosValidos.stream()
+        double totalFinde = registrosValidos.stream()
                 .filter(d -> "FIN_SEMANA".equals(d.getTipoHora()) || "FERIADO".equals(d.getTipoHora()))
                 .mapToDouble(ResumenEmpleadoDTO::getHorasTrabajadas)
                 .sum();
 
         // Total ausencias (solo días laborales)
-        long totalAusencias = detalle.stream()
-                .filter(d -> d.isAusente() && !d.isEsFeriado() && !d.isEsFinDeSemana())
-                .count();
+        List<ResumenEmpleadoDTO> ausencias = detalle.stream()
+                .filter(d -> {
+                    boolean esAusente = d.isAusente();
+                    boolean noEsFeriado = !d.isEsFeriado();
+                    boolean noEsFinDeSemana = !d.isEsFinDeSemana();
+                    System.out.println("Fecha: " + d.getFechaFormateada() +
+                            " - Ausente: " + esAusente +
+                            " - Feriado: " + d.isEsFeriado() +
+                            " - FinSemana: " + d.isEsFinDeSemana());
+                    return esAusente && noEsFeriado && noEsFinDeSemana;
+                })
+                .toList();
+
+        long totalAusencias = ausencias.size();
+
 
         // Total llegadas tarde (solo días laborales, en cualquier horario)
         long totalLlegadasTarde = detalle.stream()
@@ -439,28 +464,30 @@ public class ExcelService {
                 .mapToInt(ResumenEmpleadoDTO::getMinutosTarde) // corregido, no getMinutosTardeTotales()
                 .sum();
 
-        System.out.println(minutosTardeTotales);
 
         resultado.put("totalHoras", totalHoras);
         resultado.put("totalNormales", totalNormales);
         resultado.put("totalExtras", totalExtras);
-        resultado.put("totalFindeFeriado", totalFindeFeriado);
-        resultado.put("totalAusencias", totalAusencias);
+        resultado.put("totalFindeFeriado", totalFinde);  // Usa el mismo nombre que en el segundo método        resultado.put("totalAusencias", totalAusencias);
         resultado.put("totalLlegadasTarde", totalLlegadasTarde);
         resultado.put("diasTrabajados", diasTrabajados);
         resultado.put("minutosTardeTotales", minutosTardeTotales);
+        resultado.put("totalAusencias", totalAusencias);
 
         return resultado;
     }
 
-    public List<ResumenAsistenciasDTO> generarResumenTotalesPorLog(Long logId) {
+    public List<ResumenAsistenciasDTO> generarResumenTotalesPorLog(Long logId, Empleado.TipoContrato tipoContrato) {
         LogCargaAsistencia log = logCargaRepository.findById(logId)
                 .orElseThrow(() -> new RuntimeException("Log no encontrado"));
 
         LocalDate desde = log.getDesde();
         LocalDate hasta = log.getHasta();
 
-        List<Empleado> empleados = empleadoRepo.findAll();
+        // Filtrar empleados por tipo de contrato si se especifica
+        List<Empleado> empleados = tipoContrato != null
+                ? empleadoRepo.findByTipoContrato(tipoContrato)
+                : empleadoRepo.findAll();
 
         List<ResumenAsistenciasDTO> resumen = new ArrayList<>();
 
@@ -482,9 +509,11 @@ public class ExcelService {
                     totalHoras,
                     totalNormales,
                     totalExtras,
-                    totalFindeFeriado,  // Usamos el nombre correcto de la clave
+                    totalFindeFeriado,
                     totalAusencias,
-                    totalLlegadasTarde
+                    totalLlegadasTarde,
+                    empleado.getTipoContrato()
+
             );
 
             resumen.add(dto);
@@ -598,4 +627,12 @@ public class ExcelService {
 
         return dto;
     }
+
+    private String convertToBase64(byte[] imageBytes) {
+        if (imageBytes != null && imageBytes.length > 0) {
+            return Base64.getEncoder().encodeToString(imageBytes);
+        }
+        return null;
+    }
 }
+

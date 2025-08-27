@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: head('Empleados - A-SIS')"><link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/></head>
+<head th:replace="fragments/header :: head('Detalle Individual - A-SIS')">
+    <link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/>
+
+</head>
 <script th:src="@{/js/busqueda-dinamica.js}"></script>
 
 <body>
+
 
 <div th:replace="fragments/header :: body"></div>
 <main class="flex-fill">
     <div class="container">
         <div class="bloque-elevado px-5 py-4 mt-container">
 
-            <!-- Título con íconos -->
             <div class="d-flex align-items-center mb-4">
-                <a th:href="@{/}" class="me-3 color-iconos d-flex align-items-center" title="Volver al inicio">
+                <a href="javascript:history.back()"
+                   class="me-3 color-iconos d-flex align-items-center"
+                   title="Volver atrás">
                     <i class="bi bi-arrow-left-circle me-1 fs-5"></i>
-                    <i class="bi bi-house-door-fill fs-5"></i>
                 </a>
-                <h4 class="mb-0 text-h">Detalle de Asistencia por Empleado</h4>
+                <i class="bi bi-person-check-fill fs-5 me-2 color-iconos"></i>
+                <h4 class="mb-0 text-h">Detalle Individual de Asistencia</h4>
             </div>
+
 
             <!-- Formulario -->
             <form method="get" th:action="@{/asistencias/detalle}"
@@ -66,8 +72,10 @@
                             <span th:text="${#numbers.formatDecimal(totalNormales ?: 0.0, 1, 1) + ' h'}"></span></li>
                         <li><strong>Horas extra:</strong>
                             <span th:text="${#numbers.formatDecimal(totalExtras ?: 0.0, 1, 1) + ' h'}"></span></li>
+                        <!-- Cambia totalFinde por totalFindeFeriado para que coincida -->
                         <li><strong>Horas fin de semana y feriados:</strong>
-                            <span th:text="${#numbers.formatDecimal(totalFinde ?: 0.0, 1, 1) + ' h'}"></span></li>
+                            <span th:text="${#numbers.formatDecimal(totalFindeFeriado ?: 0.0, 1, 1) + ' h'}"></span>
+                        </li>
                         <li><strong>Ausencias:</strong>
                             <span th:text="${totalAusencias ?: 0}"></span></li>
                         <li><strong>Llegadas tarde:</strong>
@@ -76,7 +84,6 @@
                             <span th:text="${diasTrabajados ?: 0}"></span></li>
                     </ul>
                 </div>
-
 
                 <!-- Tabla -->
                 <table class="table table-bordered table-hover table-excel">
@@ -90,6 +97,9 @@
                         <th>Tipo de Hora</th>
                         <th>Horas Trabajadas</th>
                         <th>Llegada tarde</th>
+                        <!-- Nuevas columnas para imágenes -->
+                        <th th:if="${detalle.?[fotoEntradaBase64 != null].size() > 0}">Foto Entrada</th>
+                        <th th:if="${detalle.?[fotoSalidaBase64 != null].size() > 0}">Foto Salida</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -131,37 +141,53 @@
                         </td>
 
                         <!-- Tipo de hora -->
-
                         <td>
                             <span th:if="${d.ausente}">-</span>
                             <span th:if="${d.marcaIncompleta}">-</span>
                             <span th:if="${!d.ausente and !d.marcaIncompleta}">
-        <span th:switch="${d.tipoHora}">
-            <!-- Caso normal -->
-            <span th:case="'NORMAL'" class="badge bg-primary">Normal</span>
-
-            <!-- Caso extra puro (solo horas extra sin cumplir horario normal) -->
-            <span th:case="'EXTRA'" class="badge bg-danger">Extra</span>
-
-            <!-- Caso mixto (cumplió horario normal + horas extra) -->
-            <span th:case="'MIXTO'" class="badge bg-warning text-dark">Mixto</span>
-
-            <!-- Otros casos -->
-            <span th:case="'FIN_SEMANA'" class="badge bg-secondary">Finde o Feriado</span>
-            <span th:case="'FERIADO'" class="badge bg-dark">Feriado</span>
-            <span th:case="*" class="badge bg-light text-dark">-</span>
-        </span>
-    </span>
+                <span th:switch="${d.tipoHora}">
+                    <span th:case="'NORMAL'" class="badge bg-primary">Normal</span>
+                    <span th:case="'EXTRA'" class="badge bg-danger">Extra</span>
+                    <span th:case="'MIXTO'" class="badge bg-warning text-dark">Mixto</span>
+                    <span th:case="'FIN_SEMANA'" class="badge bg-secondary">Finde</span>
+                    <span th:case="'FERIADO'" class="badge bg-dark">Feriado</span>
+                    <span th:case="*" class="badge bg-light text-dark">-</span>
+                </span>
+            </span>
                         </td>
 
                         <!-- Horas trabajadas -->
                         <td th:text="${d.horasTrabajadas > 0 ? #numbers.formatDecimal(d.horasTrabajadas, 1, 'COMMA', 2, 'POINT') + ' h' : '-'}"></td>
 
                         <td th:text="${d.llegoTarde} ? ${d.minutosTarde + ' min'} : ''"></td>
+                        <!-- Foto Entrada -->
+                        <td th:if="${detalle.?[fotoEntradaBase64 != null].size() > 0}">
+                            <img th:if="${d.fotoEntradaBase64 != null}"
+                                 th:src="'data:image/jpeg;base64,' + ${d.fotoEntradaBase64}"
+                                 alt="Foto entrada"
+                                 style="width: 40px; height: 40px; object-fit: cover; cursor: pointer; border: none;"
+                                 class="img-thumbnail"
+                                 onclick="expandImage(this)"
+                                 data-bs-toggle="tooltip"
+                                 title="Click para ampliar">
+                            <span th:unless="${d.fotoEntradaBase64 != null}" class="text-muted">-</span>
+                        </td>
+
+                        <!-- Foto Salida -->
+                        <td th:if="${detalle.?[fotoSalidaBase64 != null].size() > 0}">
+                            <img th:if="${d.fotoSalidaBase64 != null}"
+                                 th:src="'data:image/jpeg;base64,' + ${d.fotoSalidaBase64}"
+                                 alt="Foto salida"
+                                 style="width: 40px; height: 40px; object-fit: cover; cursor: pointer; border: none;"
+                                 class="img-thumbnail"
+                                 onclick="expandImage(this)"
+                                 data-bs-toggle="tooltip"
+                                 title="Click para ampliar">
+                            <span th:unless="${d.fotoSalidaBase64 != null}" class="text-muted">-</span>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
-
             </div>
 
         </div>
@@ -176,6 +202,48 @@
             window.location.href = `/asistencias/editar-horario?dni=${dni}&fecha=${fecha}`;
         }
     }
+
+    // Función para expandir imágenes al hacer click
+function expandImage(imgElement) {
+    event.stopPropagation(); // Evita que se propague el click de la fila
+
+    // Crear modal para mostrar imagen ampliada
+    const modalHtml = `
+        <div class="modal fade" id="imageModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Foto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="${imgElement.src}"
+                             style="max-width: 100%; max-height: 80vh;"
+                             class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Agregar modal al DOM y mostrarlo
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+    modal.show();
+
+    // Limpiar modal cuando se cierre
+    document.getElementById('imageModal').addEventListener('hidden.bs.modal', function () {
+        this.remove();
+    });
+}
+
+// Inicializar tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
 </script>
 
 <div th:replace="fragments/footer :: footer"></div>

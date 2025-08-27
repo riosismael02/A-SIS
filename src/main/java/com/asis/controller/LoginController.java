@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import java.util.Base64;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
@@ -88,6 +87,7 @@ public class LoginController {
         new SecurityContextLogoutHandler().logout(request, response, authentication);
         return "redirect:/login?marca=ok";
     }
+
     private void registrarMarcaConFoto(Empleado empleado, byte[] foto) {
         LocalDate hoy = LocalDate.now();
         Integer ultimoOrden = registroRepo.findMaxOrdenDiaByEmpleadoAndFecha(empleado.getId(), hoy);

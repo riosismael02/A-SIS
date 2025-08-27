@@ -1,6 +1,8 @@
 package com.asis.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -10,4 +12,11 @@ public class PageController {
     public String index() {
         return "index"; // Thymeleaf buscará templates/index.html
     }
+
+    @GetMapping("/manual")
+    public String manual() {
+        return "manual-usuario"; // Thymeleaf buscará templates/index.html
+    }
+
+
 }

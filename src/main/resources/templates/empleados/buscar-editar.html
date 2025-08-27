@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: head('Editar Empleado - A-SIS')"><link rel="icon" th:href="@{/favicon.ico}" type="image/x-icon"/></head>
-<script th:src="@{/js/busqueda-dinamica.js}"></script>
 
 <body>
 
@@ -10,14 +9,16 @@
   <div class="container">
     <div class="bloque-elevado px-5 py-4 mt-container">
 
-      <!-- Título con íconos -->
       <div class="d-flex align-items-center mb-4">
-        <a th:href="@{/empleados}" class="me-3 color-iconos d-flex align-items-center" title="Volver a empleados">
+        <a href="javascript:history.back()"
+           class="me-3 color-iconos d-flex align-items-center"
+           title="Volver atrás">
           <i class="bi bi-arrow-left-circle me-1 fs-5"></i>
-          <i class="bi bi-person-check-fill fs-5"></i>
         </a>
-        <h4 class="mb-0 text-h">Editar empleado</h4>
+        <i class="bi bi-person-lines-fill fs-5 me-2 color-iconos"></i>
+        <h4 class="mb-0 text-h">Gestionar Empleados</h4>
       </div>
+
 
       <!-- Formulario de búsqueda -->
       <div class="mb-4">
@@ -38,6 +39,7 @@
       <form id="formEditarEmpleado" th:action="@{/empleados/actualizar}" method="post" class="mt-4">
         <input type="hidden" name="id" th:value="${empleado.id}">
 
+        <!-- Primera fila -->
         <div class="row mb-3">
           <div class="col">
             <label for="nombre" class="form-label">Nombre</label>
@@ -55,7 +57,6 @@
             <label for="dni" class="form-label">DNI</label>
             <input id="dni" name="dni" type="text" class="form-control"
                    th:value="${empleado.dni}" required>
-
           </div>
 
           <div class="col">
@@ -68,6 +69,7 @@
               </option>
             </select>
           </div>
+
           <div class="col">
             <label for="tipoContrato" class="form-label">Tipo de contrato</label>
             <select id="tipoContrato" name="tipoContrato" class="form-select">
@@ -80,6 +82,7 @@
           </div>
         </div>
 
+        <!-- Segunda fila -->
         <div class="row mb-3">
           <div class="col">
             <label for="horaEntrada" class="form-label">Hora de entrada</label>
@@ -92,6 +95,7 @@
             <input id="horaSalida" name="horaSalida" type="time" class="form-control"
                    th:value="${#temporals.format(empleado.horaSalida, 'HH:mm')}" required>
           </div>
+
           <div class="col">
             <label for="horaEntrada2" class="form-label">2da hora de entrada</label>
             <input id="horaEntrada2" name="horaEntrada2" type="time" class="form-control"
@@ -103,15 +107,16 @@
             <input id="horaSalida2" name="horaSalida2" type="time" class="form-control"
                    th:value="${empleado.horaSalida2 != null} ? ${#temporals.format(empleado.horaSalida2, 'HH:mm')} : ''">
           </div>
+
           <div class="col">
             <label for="flexMinutos" class="form-label">Flexibilidad (min)</label>
             <input id="flexMinutos" name="flexMinutos" type="number" class="form-control"
                    th:value="${empleado.flexMinutos}" readonly>
           </div>
 
-          <div class="col-3 d-flex align-items-end">
-            <button type="submit" class="btn-action btn-nowrap">
-              <i class="bi bi-save me-1"></i> Actualizar empleado
+          <div class="col d-flex align-items-end">
+            <button type="submit" class="btn-action btn-nowrap w-100">
+              <i class="bi bi-save me-1"></i> Actualizar
             </button>
           </div>
         </div>

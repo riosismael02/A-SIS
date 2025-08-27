@@ -2,19 +2,16 @@ package com.asis.controller;
 
 import com.asis.model.Empleado;
 import com.asis.model.dto.BusquedaEmpleadoDTO;
-import com.asis.model.dto.EdicionHorarioDTO;
 import com.asis.model.dto.EmpleadoDTO;
 import com.asis.repository.AreaRepository;
 import com.asis.repository.EmpleadoRepository;
 import com.asis.service.ExcelService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +29,7 @@ public class EmpleadoControler {
     public List<BusquedaEmpleadoDTO> buscarEmpleados(@RequestParam String q) {
         List<Empleado> empleados = empleadoRepo.buscarPorNombreApellidoODni(q);
         return empleados.stream()
-                .map(e -> new BusquedaEmpleadoDTO(e.getNombre(), e.getApellido(), e.getDni()))
+                .map(e -> new BusquedaEmpleadoDTO(e.getId(),e.getNombre(), e.getApellido(), e.getDni()))
                 .collect(Collectors.toList());
     }
 
